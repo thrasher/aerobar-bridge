@@ -12,6 +12,7 @@ AEROBAR_DIA = 7/8; // tube dia
 AEROBAR_WIDTH_C2C = 4.02; // center to center of bars
 CLIP_DIA = AEROBAR_DIA + 0.25;
 BRIDGE_LENGTH = 2;
+WING_RADIUS = (AEROBAR_WIDTH_C2C/2) + 0.21;
 
 ZIP_HEIGHT = .1; // ziptie hole height
 ZIP_WIDTH = .2; // ziptie hole width
@@ -39,12 +40,12 @@ module clips() {
     rotate([0,0,0]) clip();
 }
 module wing() {
-    translate([(AEROBAR_WIDTH_C2C)/2, -0.3, BRIDGE_LENGTH-3])
-    rotate([0,0,177])
-    rotate_extrude(angle = 186, convexity = 10)
-    translate([2 + .15, 3, 0])
+    translate([(AEROBAR_WIDTH_C2C)/2, .001, BRIDGE_LENGTH-3])
+    rotate([0,0,180])
+    rotate_extrude(angle = 180, convexity = 10)
+    translate([WING_RADIUS, 3, 0])
     R(0, -180, 90)
-    polygon(points = airfoil_data([0, 0, .3], L=BRIDGE_LENGTH + 0.3));    
+    polygon(points = airfoil_data([0.0, 0.0, 0.3], L=BRIDGE_LENGTH + 0.3));    
     clips();
 }
 module ziptie() {
@@ -111,14 +112,16 @@ translate([AEROBAR_WIDTH_C2C/2, -2.37, 0]) garmin();
 module beam() {
     ADAPTER_DIA = 31.8 / 25.4;
     LEN = 4.2;
-    cylinder(d=ADAPTER_DIA, h=LEN);
-    sphere(d=ADAPTER_DIA);
-//    translate([0,0,LEN]) sphere(d=ADAPTER_DIA);
+    dia = .5;
+    hull() {
+    translate([-.5,0,0]) cylinder(d=dia, h=LEN);
+    translate([.5,0,0]) cylinder(d=dia, h=LEN);
+    }
 }
 module beam_round() {
     difference() {
         rotate([180,0,0])
-        translate([AEROBAR_WIDTH_C2C/2, 2.3, -0.9]) beam();
+        translate([AEROBAR_WIDTH_C2C/2, WING_RADIUS, -0.9]) beam();
         bridge();
     }
 }
