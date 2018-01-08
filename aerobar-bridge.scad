@@ -27,10 +27,11 @@ module aerobars() {
 }
 
 module clip() {
-    difference() {
+    difference()
+    {
         cylinder(d=CLIP_DIA, h=BRIDGE_LENGTH);
-        cylinder(d=AEROBAR_DIA, h=BRIDGE_LENGTH);
-        translate([0, CLIP_DIA/2, BRIDGE_LENGTH/2]) cube([BRIDGE_LENGTH,CLIP_DIA,BRIDGE_LENGTH], center=true);
+        //cylinder(d=AEROBAR_DIA, h=BRIDGE_LENGTH);
+        translate([0, CLIP_DIA/2, BRIDGE_LENGTH/2]) cube([BRIDGE_LENGTH,CLIP_DIA,BRIDGE_LENGTH*2], center=true);
     }
 }
 
@@ -66,64 +67,36 @@ module zipties() {
 module bridge() {
     color([1,1,1]) difference() {
         wing();
-        aerobars();
+        translate([0,0,-1]) aerobars();
         zipties();
         translate([-1, -3, -1]) cube([6,3,1]);
     }
 }
 
-    ARM_HT=.5;
-GRMN_CENTER_SETBACK = 1.7 + 1;
-module garmin() {
-    //cube([.5, ARM_HT, 3], center=true);
-    rotate([0,90,0]) {
-        hull() {
-            translate([1.7,.1,0]) cylinder(d = .1, h=GARMIN_TH + GARMIN_DIA, center=true);
-            translate([-0.8,0,0]) cylinder(d = .5, h=GARMIN_TH + GARMIN_DIA, center=true);
-        }
-    }
-    difference() {
-        hull() {
-            translate([0,ARM_HT/2,.5]) rotate([90,0,0])
-            cylinder(d=GARMIN_TH + GARMIN_DIA, h=GARMIN_TH);
-            translate([0,ARM_HT/2,-GRMN_CENTER_SETBACK]) rotate([90,0,0])
-            cylinder(d=GARMIN_TH + GARMIN_DIA, h=GARMIN_TH);
-        }
-        translate([0,ARM_HT/2,-GRMN_CENTER_SETBACK]) rotate([90,0,0])
-        translate([0,0,-.5]) cylinder(d=GARMIN_DIA, h=GARMIN_TH+1);
-    }
-
-}
-    GARMIN_MOUNT_HT=.12; // height of mating cylinder
-module garmin_computer() {
-    BASE_DIA = 0.9825;
-    BASE_FACE= 1.3;//face of mating mount surface
-    cylinder(d=BASE_DIA, h=GARMIN_MOUNT_HT);
-    translate([0,0,GARMIN_MOUNT_HT]) cylinder(d=BASE_FACE, h=.1);
-    translate([0,0,GARMIN_MOUNT_HT + .35]) cube([1.9,2.86,.7], center=true);
-}
-module beam_quarter_turn() {
-difference() {
-//translate([AEROBAR_WIDTH_C2C/2, -2.4+ARM_HT/2-GARMIN_MOUNT_HT, -GRMN_CENTER_SETBACK]) rotate([90,0,0]) garmin_computer();
-translate([AEROBAR_WIDTH_C2C/2, -2.37, 0]) garmin();
-    bridge();
-}
-}
 module beam() {
     ADAPTER_DIA = 31.8 / 25.4;
     LEN = 4.2;
-    dia = .5;
+    dia = .58;
     hull() {
-    translate([-.5,0,0]) cylinder(d=dia, h=LEN);
-    translate([.5,0,0]) cylinder(d=dia, h=LEN);
+        translate([-KEDGE_INSERT_DIA/2,0,0]) cylinder(d=dia, h=LEN);
+        translate([KEDGE_INSERT_DIA/2,0,0]) cylinder(d=dia, h=LEN);
     }
 }
 module beam_round() {
     difference() {
         rotate([180,0,0])
-        translate([AEROBAR_WIDTH_C2C/2, WING_RADIUS, -0.9]) beam();
-        bridge();
-    }
+        translate([AEROBAR_WIDTH_C2C/2, WING_RADIUS-.05, -1.25]) beam();
+translate([AEROBAR_WIDTH_C2C/2,-WING_RADIUS+.3,-2.2])
+rotate([90,0,0]) kedge_insert();    }
 }
 beam_round();
 bridge();
+KEDGE_INSERT_DIA = 1.325;
+module kedge_insert() {
+    btw_screws = 0.79;
+    cylinder(d=KEDGE_INSERT_DIA, h=.2);
+    translate([0,btw_screws/2,-.2]) cylinder(d=.1, h=.2);
+    translate([0,-btw_screws/2,-.2]) cylinder(d=.1, h=.2);
+    
+    translate([0,0,.2]) cylinder(r1=1.2, r2=1.63, h=.71);
+}
