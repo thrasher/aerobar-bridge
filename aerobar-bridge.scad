@@ -11,7 +11,8 @@ $fn = 100;
 
 AEROBAR_DIA = 7/8; // tube dia
 AEROBAR_WIDTH_C2C = 4.02; // center to center of bars
-CLIP_DIA = AEROBAR_DIA + 0.25;
+CLIP_THICKNESS = 0.125;
+CLIP_DIA = AEROBAR_DIA + CLIP_THICKNESS*2;
 BRIDGE_LENGTH = 2;
 WING_RADIUS = (AEROBAR_WIDTH_C2C/2) + 0.21;
 
@@ -28,9 +29,16 @@ module aerobars() {
 }
 
 module clip() {
+
     difference()
     {
-        cylinder(d=CLIP_DIA, h=BRIDGE_LENGTH);
+        union() {
+            translate([0,0,.1*2]) cylinder(d=CLIP_DIA, h=BRIDGE_LENGTH-.1*4);
+            translate([0,0,BRIDGE_LENGTH- 2*.1])
+            cylinder(d1=CLIP_DIA, d2=CLIP_DIA-CLIP_THICKNESS*1.8, h=.1*2);
+            translate([0,0,0])
+            cylinder(d2=CLIP_DIA, d1=CLIP_DIA-CLIP_THICKNESS*1.8, h=.1*2);
+        }
         //cylinder(d=AEROBAR_DIA, h=BRIDGE_LENGTH);
         translate([0, CLIP_DIA/2, BRIDGE_LENGTH/2]) cube([BRIDGE_LENGTH,CLIP_DIA,BRIDGE_LENGTH*2], center=true);
     }
@@ -112,11 +120,14 @@ module battery() {
     cylinder(d = BATT_DIA, h = BATT_LEN);
 }
 
+module gopro() {
+    translate([AEROBAR_WIDTH_C2C/2,-1.2,2.4])
+    rotate([270,0,0]) rotate([0,90,0])
+    scale(1/25.4)
+    goprofins();
+}
+
 // final drawing
 body();
-battery();
+//battery();
 
-translate([AEROBAR_WIDTH_C2C/2,-1.2,2.4])
-rotate([270,0,0]) rotate([0,90,0])
-scale(1/25.4)
-goprofins();
