@@ -48,6 +48,7 @@ module hexagon(length, depth = 2) {
     }
 }
 module bevelshim() {
+    color(1,0,0)
         difference(){
             cylinder(d=GARMIN_OUTER_DIA, h=BEVEL);
             translate([-50, GOPRO_FIN_DIA/2, -50])
@@ -66,11 +67,8 @@ module goprofins() {
         group() {
             hull(){
                 cylinder(d=GOPRO_FIN_DIA, h=GOPRO_FIN_DIA, center=true);
-                translate([GARMIN_DROP,GARMIN_SETBACK,0])
+                translate([GARMIN_DROP+15,GARMIN_SETBACK,0])
                 cube([0.01, GARMIN_INNER_DIA*.8, GOPRO_FIN_DIA], center=true);
-    rotate([90, 0, 90])
-    translate([GARMIN_SETBACK, 0, GARMIN_DROP])
-                bevelshim();
             }
         }
         
@@ -99,15 +97,6 @@ module goprofins() {
         }
         translate([0,0,GOPRO_FIN_DIA/2+HEX_THICKNESS/2])
         hexagon(HEX_DIM/2, HEX_THICKNESS+1);
-    }
-    
-    // disc
-    rotate([90, 0, 90])
-    translate([GARMIN_SETBACK, 0, GARMIN_DROP])
-    group() {
-        cylinder(d=GARMIN_INNER_DIA, h=GARMIN_THICKNESS);
-        cylinder(d1=GARMIN_INNER_DIA, d2=GARMIN_OUTER_DIA, h=BEVEL);
-        bevelshim();
     }
 }
 

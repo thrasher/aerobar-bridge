@@ -3,6 +3,7 @@
 
  use <NACA_Airfoil_lib/shortcuts.scad>  // see: http://www.thingiverse.com/thing:644830
  use <NACA_Airfoil_lib/naca4.scad>
+ use <gopro-mount.scad>
 
 $fs = 0.1; // mm per facet in cylinder
 $fa = 5; // degrees per facet in cylinder
@@ -65,7 +66,7 @@ module zipties() {
     ziptie();
 }
 module bridge() {
-    color([1,1,1]) difference() {
+    color([.9,0,0]) difference() {
         wing();
         translate([0,0,-1]) aerobars();
         zipties();
@@ -89,8 +90,10 @@ module beam_round() {
 translate([AEROBAR_WIDTH_C2C/2,-WING_RADIUS+.3,-2.2])
 rotate([90,0,0]) kedge_insert();    }
 }
-beam_round();
-bridge();
+module body() {
+    beam_round();
+    bridge();
+}
 KEDGE_INSERT_DIA = 1.325;
 module kedge_insert() {
     btw_screws = 0.79;
@@ -100,3 +103,20 @@ module kedge_insert() {
     
     translate([0,0,.2]) cylinder(r1=1.2, r2=1.63, h=.71);
 }
+module battery() {
+    // https://www.anker.com/products/variant/PowerCore%2B-Mini-3350/A11040B1
+    BATT_LEN = 3.7;
+    BATT_DIA = 0.9;
+    color([.5,.5,.5])
+    translate([AEROBAR_WIDTH_C2C/2,-WING_RADIUS+.8,-2.5])
+    cylinder(d = BATT_DIA, h = BATT_LEN);
+}
+
+// final drawing
+body();
+battery();
+
+translate([AEROBAR_WIDTH_C2C/2,-1.2,2.4])
+rotate([270,0,0]) rotate([0,90,0])
+scale(1/25.4)
+goprofins();
