@@ -117,11 +117,11 @@ module beam_round() {
             }
             rotate([90,0,0])
             rotate_extrude(convexity = 10)
-            translate([GARMIN_DIA/2, 0, 0])
+            translate([.8*GARMIN_DIA/2, 0, 0])
             circle(d = BAR_DIA);
             
             rotate([270,0,0])
-            cylinder(d=GARMIN_DIA, h=BAR_DIA/2);
+            cylinder(d=.8*GARMIN_DIA, h=BAR_DIA/2);
         }
         translate([0, -0.05, 0])
         rotate([90,0,0])
@@ -146,8 +146,23 @@ module battery() {
 module gopro() {
     translate([AEROBAR_WIDTH_C2C/2,-1.2,2.4])
     rotate([270,0,0]) rotate([0,90,0])
-    scale(1/25.4)
-    goprofins();
+    scale(1/25.4) difference() {
+        union() {
+            goprofins();
+            BASE = 25.4*GARMIN_DIA/2;
+            rotate([90,0,-41]) translate([0,0,-15]) {
+//                cylinder(d1=25.4*GARMIN_DIA/2, d2=15, h=10);
+                cube([BASE,BASE,10], center=true);
+            }
+            
+        }
+            rotate([90,0,-41]) translate([0,0,-15])
+                cube([25.4*ZIP_WIDTH,500,25.4*ZIP_HEIGHT], center=true);
+            rotate([90,90,-41]) translate([0,0,-15])
+                cube([25.4*ZIP_WIDTH,500,25.4*ZIP_HEIGHT], center=true);
+        rotate([90,0,-41]) translate([0,0,-50])
+            cylinder(d=30, h=30);
+    }
 }
 
 module slice() {
@@ -171,6 +186,8 @@ module final_arm() {
         final_wing();
     }
 }
+
+//gopro();
 
 //final_wing();
 //final_arm();
