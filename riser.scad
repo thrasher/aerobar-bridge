@@ -4,11 +4,15 @@ $fs = 0.1; // mm per facet in cylinder
 $fa = 5; // degrees per facet in cylinder
 $fn = 100;
 
+SIDE = "left";
+ANG = 0;
+HEIGHT = 10;
+
 LENGTH = 80-6;
 WIDTH = 95 - 4;
 CORNER_RADIUS = 20;
-RISE = 20;
-ANGLE = 90;
+RISE = HEIGHT;
+ANGLE = 90-ANG;
 
 module corner() {
     cylinder(r=CORNER_RADIUS, h=RISE+20);
@@ -23,12 +27,12 @@ module riser() {
             translate([WIDTH-(2*CORNER_RADIUS),LENGTH-(2*CORNER_RADIUS),0]) corner();
             translate([WIDTH-(2*CORNER_RADIUS),0,0]) corner();
         }
-        
+
         // arm rest
         translate([0, 0, 100 + RISE])
         rotate([ANGLE,0,0])
         cylinder(r=100, h=200, center=true);
-        
+
         lift();
 
 //        bolt_holes();
@@ -53,7 +57,7 @@ module lift() {
         cylinder(r=100, h=LENGTH*1.2);
         cylinder(r=LIFT_RADIUS, h=LENGTH*1.2);
         translate([-500,0,0]) cube([1000,100,100]);
-        translate([-100,-100,0]) cube([100,100,100]);    
+        translate([-100,-100,0]) cube([100,100,100]);
     }
 }
 
@@ -67,10 +71,9 @@ module right() {
     riser();
 }
 
-module export(part) { 
-    if (part == 1) left(); 
-    if (part == 2) right(); 
+module export(SIDE = "left") {
+    if (SIDE == "left") left();
+    if (SIDE == "right") right();
 }
 // to be called from bash script
-part = 1; // default part for rendering in editor
-export(part);
+export(SIDE);
