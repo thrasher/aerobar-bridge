@@ -14,6 +14,7 @@ def render():
 
 	scad = []
 	scad.append(subprocess.Popen(['openscad','aerobar-flat.scad','-o','aerobar-flat.stl']))
+	scad.append(subprocess.Popen(['openscad','mount2.scad','-o','mount2.stl']))
 
 	# wait for all threads to finish, so we know we're done
 	for p in scad:
