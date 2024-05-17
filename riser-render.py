@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # a reference to openscad must exist
 # sudo ln -sf /Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD /usr/local/bin/openscad
 
@@ -9,7 +9,7 @@ import time
 # render the stl
 def render():
 	# render each part in a thread, so it all goes faster
-	print 'Starting render'
+	print('Starting render')
 	start = time.time()
 
 	scad = []
@@ -27,7 +27,7 @@ def render():
 		p.wait()
 
 	elapsed = round(time.time() - start, 1)
-	print 'Rendering done in', elapsed, 'seconds!'
+	print('Rendering done in', elapsed, 'seconds!')
 
 def main():
 	render()
